@@ -98,7 +98,7 @@ function renderAdminMap(rows, signedUrlMap) {
   const markerLayers = [];
 
   rows.forEach(row => {
-    const marker = createPhotoMarker(
+    const marker = createPhotoThumbnailMarker(
       adminMap,
       row,
       signedUrlMap[row.storage_path] || "",

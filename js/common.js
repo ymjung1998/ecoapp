@@ -120,15 +120,6 @@ function safeFileName(fileName) {
     .replace(/[^a-zA-Z0-9._-]/g, "");
 }
 
-async function getSignedUrl(path, expiresIn = 3600) {
-  const { data, error } = await window.sb.storage
-    .from("photos")
-    .createSignedUrl(path, expiresIn);
-
-  if (error) throw error;
-  return data.signedUrl;
-}
-
 async function getSignedUrlMap(paths) {
   const uniquePaths = [...new Set(paths.filter(Boolean))];
   if (!uniquePaths.length) return {};

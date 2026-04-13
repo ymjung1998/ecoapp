@@ -14,7 +14,7 @@ function renderProjectGeometries(map, geometries) {
 
   (geometries || []).forEach(item => {
     const layer = L.geoJSON(item.geojson, {
-      style: feature => {
+      style: () => {
         if (item.geometry_type === "route") {
           return {
             color: "#1e6fff",
@@ -38,29 +38,15 @@ function renderProjectGeometries(map, geometries) {
 }
 
 function fitMapToLayers(map, layers) {
-  const group = L.featureGroup(layers.filter(Boolean));
-  if (layers.length) {
-    map.fitBounds(group.getBounds().pad(0.12));
+  const validLayers = layers.filter(Boolean);
+  if (!validLayers.length) return;
+
+  const group = L.featureGroup(validLayers);
+  const bounds = group.getBounds();
+
+  if (bounds.isValid()) {
+    map.fitBounds(bounds.pad(0.12));
   }
-}
-
-function createPhotoMarker(map, photo, signedUrl, extraHtml = "") {
-  if (!photo.photo_lat || !photo.photo_lng) return null;
-
-  const marker = L.marker([photo.photo_lat, photo.photo_lng]).addTo(map);
-
-  const popupHtml = `
-    <div>
-      ${signedUrl ? `<img class="popup-thumb" src="${signedUrl}" alt="썸네일" />` : ""}
-      <div><strong>${escapeHtml(photo.file_name || "사진")}</strong></div>
-      ${extraHtml}
-      <div>촬영: ${escapeHtml(formatDateTime(photo.photo_taken_at))}</div>
-      <div>위치: ${escapeHtml(formatCoord(photo.photo_lat))}, ${escapeHtml(formatCoord(photo.photo_lng))}</div>
-    </div>
-  `;
-
-  marker.bindPopup(popupHtml);
-  return marker;
 }
 
 function createCurrentLocationMarker(map, lat, lng) {
@@ -88,4 +74,37 @@ function pointInsideAllowedArea(lat, lng, geometries) {
   });
 
   return allowed;
+}
+
+function createPhotoThumbnailMarker(map, photo, signedUrl, extraHtml = "") {
+  if (!photo.photo_lat || !photo.photo_lng || !signedUrl) return null;
+
+  const thumbHtml = `
+    <div class="map-thumb-marker">
+      <img src="${signedUrl}" alt="사진 썸네일" />
+    </div>
+  `;
+
+  const icon = L.divIcon({
+    html: thumbHtml,
+    className: "custom-thumb-icon",
+    iconSize: [56, 56],
+    iconAnchor: [28, 28],
+    popupAnchor: [0, -24]
+  });
+
+  const marker = L.marker([photo.photo_lat, photo.photo_lng], { icon }).addTo(map);
+
+  const popupHtml = `
+    <div>
+      <img class="popup-thumb" src="${signedUrl}" alt="썸네일" />
+      <div><strong>${escapeHtml(photo.file_name || "사진")}</strong></div>
+      ${extraHtml}
+      <div>촬영: ${escapeHtml(formatDateTime(photo.photo_taken_at))}</div>
+      <div>위치: ${escapeHtml(formatCoord(photo.photo_lat))}, ${escapeHtml(formatCoord(photo.photo_lng))}</div>
+    </div>
+  `;
+
+  marker.bindPopup(popupHtml);
+  return marker;
 }

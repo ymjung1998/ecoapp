@@ -119,7 +119,7 @@ async function loadCurrentLocation() {
 
   if (inside) {
     locationStatus.textContent = "현재 위치는 프로젝트 반경 안에 있습니다. 카메라 업로드가 가능합니다.";
-    showMessage("현재 위치가 프로젝트 반경 안에 있습니다. 카메라 업로드가 가능합니다.", "success");
+    showMessage("현재 위치가 프로젝트 반경 안에 있습니다. 카메라 촬영 업로드가 가능합니다.", "success");
   } else {
     locationStatus.textContent = "현재 위치는 프로젝트 반경 밖입니다. 앨범 업로드는 사진 위치가 반경 안이면 가능합니다.";
     showMessage("현재 위치가 반경 밖이어도, 앨범 사진의 EXIF 위치가 반경 안이면 업로드할 수 있습니다.", "info");
@@ -133,13 +133,7 @@ async function handleFileSelected(file, sourceType) {
   selectedSourceType = sourceType;
 
   if (!file) {
-    selectedFile = null;
-    selectedExif = null;
-    selectedSourceType = null;
-    previewImage.classList.add("hidden");
-    previewImage.src = "";
-    fileInfo.textContent = "선택된 파일이 없습니다.";
-    updateUploadButtonState();
+    resetSelectedFileState();
     return;
   }
 
@@ -150,74 +144,115 @@ async function handleFileSelected(file, sourceType) {
     previewImage.src = imageUrl;
     previewImage.classList.remove("hidden");
 
-    const exif = await exifr.parse(file, {
-      gps: true,
-      tiff: true,
-      exif: true
-    });
-
-    const photoLat = exif?.latitude;
-    const photoLng = exif?.longitude;
-    const photoTakenAt = exif?.DateTimeOriginal || exif?.CreateDate || null;
-
-    if (!photoLat || !photoLng) {
-      selectedExif = null;
-      fileInfo.textContent = `파일명: ${file.name} / 위치 정보(EXIF GPS)가 없습니다.`;
-      showMessage("이 사진에는 위치 정보(EXIF GPS)가 없어 업로드할 수 없습니다.", "error");
-      updateUploadButtonState();
-      return;
+    let exif = null;
+    try {
+      exif = await exifr.parse(file, {
+        gps: true,
+        tiff: true,
+        exif: true
+      });
+    } catch (exifError) {
+      exif = null;
     }
 
-    if (!photoTakenAt) {
-      selectedExif = null;
-      fileInfo.textContent = `파일명: ${file.name} / 촬영 시간 정보가 없습니다.`;
-      showMessage("이 사진에는 촬영 시간 정보가 없어 업로드할 수 없습니다.", "error");
-      updateUploadButtonState();
-      return;
-    }
+    const photoLat = exif?.latitude ?? null;
+    const photoLng = exif?.longitude ?? null;
+    const rawTakenAt = exif?.DateTimeOriginal || exif?.CreateDate || null;
+    const photoTakenAt = rawTakenAt ? new Date(rawTakenAt).toISOString() : null;
 
     selectedExif = {
-      raw: exif,
+      raw: exif || null,
       photoLat,
       photoLng,
-      photoTakenAt: new Date(photoTakenAt).toISOString()
+      photoTakenAt
     };
 
-    const exifInside = pointInsideAllowedArea(
-      selectedExif.photoLat,
-      selectedExif.photoLng,
-      currentGeometries
-    );
-
-    fileInfo.textContent = [
-      `파일명: ${file.name}`,
-      `업로드 방식: ${sourceType === "camera" ? "카메라 촬영" : "앨범 선택"}`,
-      `사진 위치: ${formatCoord(photoLat)}, ${formatCoord(photoLng)}`,
-      `촬영 시간: ${formatDateTime(photoTakenAt)}`,
-      `사진 위치 반경 포함 여부: ${exifInside ? "포함" : "반경 밖"}`
-    ].join(" / ");
-
     if (sourceType === "gallery") {
-      if (exifInside) {
-        showMessage("앨범 사진의 촬영 위치가 프로젝트 반경 안에 있어 업로드할 수 있습니다.", "success");
-      } else {
-        showMessage("앨범 사진의 촬영 위치가 프로젝트 반경 밖이어서 업로드할 수 없습니다.", "error");
-      }
+      await handleGalleryFileSelection(file);
     } else {
-      showMessage("카메라 업로드 사진이 선택되었습니다. 현재 위치 기준으로 업로드 가능 여부를 확인합니다.", "info");
+      await handleCameraFileSelection(file);
     }
 
     updateUploadButtonState();
   } catch (error) {
     selectedExif = null;
-    fileInfo.textContent = "사진 메타데이터를 읽지 못했습니다.";
-    showMessage("사진 EXIF 정보를 읽는 중 오류가 발생했습니다.", "error");
+    fileInfo.textContent = "사진 정보를 읽지 못했습니다.";
+    showMessage(error.message || "사진 정보를 처리하는 중 오류가 발생했습니다.", "error");
     updateUploadButtonState();
   }
 }
 
+async function handleGalleryFileSelection(file) {
+  if (!selectedExif?.photoLat || !selectedExif?.photoLng) {
+    selectedExif = null;
+    fileInfo.textContent = `파일명: ${file.name} / 위치 정보(EXIF GPS)가 없습니다.`;
+    showMessage("앨범 업로드는 사진의 위치 정보(EXIF GPS)가 있어야 합니다.", "error");
+    return;
+  }
+
+  if (!selectedExif?.photoTakenAt) {
+    selectedExif = null;
+    fileInfo.textContent = `파일명: ${file.name} / 촬영 시간 정보가 없습니다.`;
+    showMessage("앨범 업로드는 사진의 촬영 시간 정보가 있어야 합니다.", "error");
+    return;
+  }
+
+  const exifInside = pointInsideAllowedArea(
+    selectedExif.photoLat,
+    selectedExif.photoLng,
+    currentGeometries
+  );
+
+  fileInfo.textContent = [
+    `파일명: ${file.name}`,
+    `업로드 방식: 앨범 선택`,
+    `사진 위치: ${formatCoord(selectedExif.photoLat)}, ${formatCoord(selectedExif.photoLng)}`,
+    `촬영 시간: ${formatDateTime(selectedExif.photoTakenAt)}`,
+    `사진 위치 반경 포함 여부: ${exifInside ? "포함" : "반경 밖"}`
+  ].join(" / ");
+
+  if (exifInside) {
+    showMessage("앨범 사진의 촬영 위치가 프로젝트 반경 안에 있어 업로드할 수 있습니다.", "success");
+  } else {
+    showMessage("앨범 사진의 촬영 위치가 프로젝트 반경 밖이어서 업로드할 수 없습니다.", "error");
+  }
+}
+
+async function handleCameraFileSelection(file) {
+  const currentInside = currentLocation
+    ? pointInsideAllowedArea(currentLocation.lat, currentLocation.lng, currentGeometries)
+    : false;
+
+  const hasExifLocation = !!(selectedExif?.photoLat && selectedExif?.photoLng);
+  const hasExifTime = !!selectedExif?.photoTakenAt;
+
+  fileInfo.textContent = [
+    `파일명: ${file.name}`,
+    `업로드 방식: 카메라 촬영`,
+    `현재 위치 반경 포함 여부: ${currentInside ? "포함" : "반경 밖"}`,
+    `사진 EXIF 위치: ${hasExifLocation ? `${formatCoord(selectedExif.photoLat)}, ${formatCoord(selectedExif.photoLng)}` : "없음(아이폰 웹카메라에서는 정상일 수 있음)"}`,
+    `사진 EXIF 촬영 시간: ${hasExifTime ? formatDateTime(selectedExif.photoTakenAt) : "없음(현재 시각으로 대체 저장 예정)"}`
+  ].join(" / ");
+
+  if (currentInside) {
+    showMessage("카메라 촬영 업로드는 현재 위치 기준으로 업로드할 수 있습니다.", "success");
+  } else {
+    showMessage("카메라 촬영 업로드는 현재 위치가 프로젝트 반경 안에 있어야 합니다.", "error");
+  }
+}
+
+function resetSelectedFileState() {
+  selectedFile = null;
+  selectedExif = null;
+  selectedSourceType = null;
+  previewImage.classList.add("hidden");
+  previewImage.src = "";
+  fileInfo.textContent = "선택된 파일이 없습니다.";
+  updateUploadButtonState();
+}
+
 function canUploadNow() {
-  if (!selectedFile || !selectedExif || !selectedSourceType || !currentGeometries.length) {
+  if (!selectedFile || !selectedSourceType || !currentGeometries.length) {
     return false;
   }
 
@@ -232,6 +267,10 @@ function canUploadNow() {
   }
 
   if (selectedSourceType === "gallery") {
+    if (!selectedExif?.photoLat || !selectedExif?.photoLng || !selectedExif?.photoTakenAt) {
+      return false;
+    }
+
     return pointInsideAllowedArea(
       selectedExif.photoLat,
       selectedExif.photoLng,
@@ -246,6 +285,42 @@ function updateUploadButtonState() {
   uploadBtn.disabled = !canUploadNow();
 }
 
+function getPhotoLatForSave() {
+  if (selectedSourceType === "gallery") {
+    return selectedExif.photoLat;
+  }
+
+  if (selectedSourceType === "camera") {
+    return selectedExif?.photoLat ?? currentLocation?.lat ?? null;
+  }
+
+  return null;
+}
+
+function getPhotoLngForSave() {
+  if (selectedSourceType === "gallery") {
+    return selectedExif.photoLng;
+  }
+
+  if (selectedSourceType === "camera") {
+    return selectedExif?.photoLng ?? currentLocation?.lng ?? null;
+  }
+
+  return null;
+}
+
+function getPhotoTakenAtForSave() {
+  if (selectedSourceType === "gallery") {
+    return selectedExif.photoTakenAt;
+  }
+
+  if (selectedSourceType === "camera") {
+    return selectedExif?.photoTakenAt ?? new Date().toISOString();
+  }
+
+  return null;
+}
+
 async function handleUpload() {
   try {
     hideMessage();
@@ -254,9 +329,9 @@ async function handleUpload() {
 
     if (!canUploadNow()) {
       if (selectedSourceType === "camera") {
-        showMessage("카메라 업로드는 현재 위치가 프로젝트 반경 안에 있어야 합니다.", "error");
+        showMessage("카메라 촬영 업로드는 현재 위치가 프로젝트 반경 안에 있어야 합니다.", "error");
       } else if (selectedSourceType === "gallery") {
-        showMessage("앨범 업로드는 사진의 EXIF 위치가 프로젝트 반경 안에 있어야 합니다.", "error");
+        showMessage("앨범 업로드는 사진의 EXIF 위치와 촬영 시간이 필요하며, 사진 위치가 프로젝트 반경 안에 있어야 합니다.", "error");
       } else {
         showMessage("업로드 조건을 다시 확인해 주세요.", "error");
       }
@@ -276,6 +351,15 @@ async function handleUpload() {
 
     if (uploadError) throw uploadError;
 
+    const photoLatForSave = getPhotoLatForSave();
+    const photoLngForSave = getPhotoLngForSave();
+    const photoTakenAtForSave = getPhotoTakenAtForSave();
+
+    if (photoLatForSave == null || photoLngForSave == null || !photoTakenAtForSave) {
+      await window.sb.storage.from("photos").remove([storagePath]);
+      throw new Error("사진 저장에 필요한 위치 또는 시간 정보를 만들지 못했습니다.");
+    }
+
     const { error: insertError } = await window.sb
       .from("photos")
       .insert({
@@ -285,12 +369,12 @@ async function handleUpload() {
         storage_path: storagePath,
         file_name: selectedFile.name,
         memo: memoInput.value.trim() || null,
-        photo_lat: selectedExif.photoLat,
-        photo_lng: selectedExif.photoLng,
-        photo_taken_at: selectedExif.photoTakenAt,
-        upload_lat: currentLocation?.lat ?? selectedExif.photoLat,
-        upload_lng: currentLocation?.lng ?? selectedExif.photoLng,
-        exif_json: selectedExif.raw
+        photo_lat: photoLatForSave,
+        photo_lng: photoLngForSave,
+        photo_taken_at: photoTakenAtForSave,
+        upload_lat: currentLocation?.lat ?? photoLatForSave,
+        upload_lng: currentLocation?.lng ?? photoLngForSave,
+        exif_json: selectedExif?.raw || null
       });
 
     if (insertError) {

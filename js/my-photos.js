@@ -40,7 +40,11 @@ async function loadMyPhotosPage() {
     const markerLayers = [];
 
     photos.forEach(photo => {
-      const marker = createPhotoMarker(myMap, photo, signedUrlMap[photo.storage_path] || "");
+      const marker = createPhotoThumbnailMarker(
+        myMap,
+        photo,
+        signedUrlMap[photo.storage_path] || ""
+      );
       if (marker) markerLayers.push(marker);
     });
 

@@ -35,29 +35,37 @@
       <section class="card-section">
         <div class="section-head">
           <h2>사진 업로드</h2>
-          <p class="subtext">현재 위치가 프로젝트 반경 안에 있어야 업로드할 수 있습니다.</p>
+          <p class="subtext">
+            카메라 촬영 업로드는 현재 위치가 프로젝트 반경 안이어야 합니다.
+            앨범 업로드는 사진의 위치(EXIF)가 프로젝트 반경 안이면 가능합니다.
+            아이폰 웹카메라 촬영 사진은 위치 EXIF가 없을 수 있으며, 이 경우 현재 위치 기준으로 처리됩니다.
+          </p>
         </div>
 
         <div class="upload-grid">
           <div class="upload-box">
-            <label class="input-label" for="cameraInput">카메라 촬영 업로드</label>
+            <label class="input-label" for="cameraInput">카메라로 바로 촬영</label>
             <input id="cameraInput" type="file" accept="image/*" capture="environment" />
           </div>
 
           <div class="upload-box">
-            <label class="input-label" for="galleryInput">앨범에서 업로드</label>
+            <label class="input-label" for="galleryInput">앨범에서 선택</label>
             <input id="galleryInput" type="file" accept="image/*" />
           </div>
         </div>
 
         <div class="preview-card">
-          <img id="previewImage" class="preview-image hidden" alt="미리보기" />
+          <img id="previewImage" class="preview-image hidden" alt="사진 미리보기" />
           <div id="fileInfo" class="file-info">선택된 파일이 없습니다.</div>
         </div>
 
         <div class="form-group">
           <label for="memoInput">메모</label>
-          <textarea id="memoInput" rows="4" placeholder="사진에 대한 간단한 설명을 입력하세요."></textarea>
+          <textarea
+            id="memoInput"
+            rows="4"
+            placeholder="사진에 대한 설명이나 관찰 내용을 입력하세요."
+          ></textarea>
         </div>
 
         <button id="uploadBtn" class="primary-btn" type="button" disabled>업로드</button>

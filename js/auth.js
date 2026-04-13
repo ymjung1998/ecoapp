@@ -78,10 +78,7 @@ async function handleLogin(event) {
     if (error) {
       const message = String(error.message || "").toLowerCase();
 
-      if (
-        message.includes("invalid login credentials") ||
-        message.includes("invalid_credentials")
-      ) {
+      if (message.includes("invalid login credentials") || message.includes("invalid_credentials")) {
         throw new Error("아이디 또는 비밀번호가 올바르지 않습니다.");
       }
 
@@ -139,19 +136,13 @@ async function handleSignup(event) {
       const message = String(signUpError.message || "").toLowerCase();
 
       if (message.includes("email rate limit exceeded")) {
-        throw new Error(
-          "회원가입 요청이 너무 많아 잠시 제한되었습니다. 잠시 후 다시 시도하거나, 이미 가입된 계정이면 로그인해 주세요."
-        );
+        throw new Error("회원가입 요청이 너무 많아 잠시 제한되었습니다. 잠시 후 다시 시도하거나, 이미 가입된 계정이면 로그인해 주세요.");
       }
 
       if (message.includes("user already registered")) {
         activateTab("login");
         qs("#loginId").value = loginId;
         throw new Error("이미 가입된 아이디입니다. 회원가입 대신 로그인해 주세요.");
-      }
-
-      if (message.includes("email address")) {
-        throw new Error("내부 이메일 형식 설정을 확인해야 합니다.");
       }
 
       throw signUpError;
@@ -175,10 +166,7 @@ async function handleSignup(event) {
     if (profileError) {
       const profileMessage = String(profileError.message || "").toLowerCase();
 
-      if (
-        profileMessage.includes("duplicate") ||
-        profileMessage.includes("unique")
-      ) {
+      if (profileMessage.includes("duplicate") || profileMessage.includes("unique")) {
         activateTab("login");
         qs("#loginId").value = loginId;
         throw new Error("이미 사용 중인 아이디입니다. 로그인해 주세요.");
@@ -206,9 +194,7 @@ async function handleSignup(event) {
       window.location.href = "./projects.html";
     }, 300);
   } catch (error) {
-    const message = String(error.message || "");
-
-    showMessage(message || "회원가입 중 오류가 발생했습니다.", "error");
+    showMessage(String(error.message || "회원가입 중 오류가 발생했습니다."), "error");
   } finally {
     setSubmittingState(false);
   }

@@ -7,7 +7,6 @@
   --primary: #1e6fff;
   --primary-dark: #1758ca;
   --danger: #d93025;
-  --success: #188038;
   --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
   --radius: 18px;
 }
@@ -30,11 +29,6 @@ button, input, textarea, select {
 
 button {
   cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 .hidden {
@@ -217,6 +211,7 @@ textarea {
 .subtext {
   margin: 0;
   color: var(--sub);
+  line-height: 1.5;
 }
 
 .topbar-actions {
@@ -407,6 +402,28 @@ textarea {
   color: #1249a3;
   font-size: 13px;
   font-weight: 700;
+}
+
+.custom-thumb-icon {
+  background: transparent;
+  border: none;
+}
+
+.map-thumb-marker {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  background: #fff;
+}
+
+.map-thumb-marker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 @media (max-width: 900px) {
