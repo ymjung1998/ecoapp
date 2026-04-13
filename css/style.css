@@ -453,3 +453,169 @@ textarea {
     flex: 1;
   }
 }
+
+/* =========================================
+   공통 배경 이미지 스타일
+========================================= */
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background:
+    linear-gradient(rgba(10, 18, 30, 0.55), rgba(10, 18, 30, 0.72)),
+    url("../assets/bg-main.jpg") center center / cover no-repeat fixed;
+  color: #ffffff;
+}
+
+/* 내부 페이지 컨텐츠 가독성 확보 */
+.page-shell,
+.auth-shell {
+  position: relative;
+  z-index: 2;
+}
+
+/* 카드/섹션은 반투명 유리 느낌 */
+.auth-card,
+.card-section,
+.project-card,
+.photo-card,
+.upload-box,
+.preview-card {
+  background: rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* 텍스트 톤 조정 */
+.topbar h1,
+.section-head h2,
+.project-card h3,
+.photo-meta h3,
+.brand-block h1,
+label,
+.input-label {
+  color: #ffffff;
+}
+
+.subtext,
+.brand-block p,
+.project-card p,
+.photo-meta p,
+.file-info,
+.auth-help {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* 입력창 */
+input,
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 버튼 */
+.ghost-btn {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+
+.primary-btn {
+  box-shadow: 0 8px 20px rgba(30, 111, 255, 0.28);
+}
+
+/* 상단 로고 바 */
+.logo-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.logo-topbar img {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.logo-topbar .logo-text {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* 로그인 페이지에서 로고 여백 */
+.auth-card .logo-topbar {
+  margin-bottom: 22px;
+}
+
+/* 탭 */
+.tab-btn {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.tab-btn.active {
+  color: #ffffff;
+}
+
+/* 메시지 박스 */
+.message-box.info {
+  background: rgba(47, 109, 246, 0.22);
+  color: #eaf2ff;
+}
+
+.message-box.error {
+  background: rgba(217, 48, 37, 0.22);
+  color: #ffe3df;
+}
+
+.message-box.success {
+  background: rgba(24, 128, 56, 0.22);
+  color: #e1ffe8;
+}
+
+/* 지도 외곽선도 밝게 */
+.map-box,
+.photo-thumb,
+.popup-thumb {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* 너무 밝게 보이는 기본 배경 제거 */
+.auth-body {
+  background: transparent !important;
+}
+
+/* 모바일에서 배경 고정 이슈 완화 */
+@media (max-width: 768px) {
+  body {
+    background:
+      linear-gradient(rgba(10, 18, 30, 0.58), rgba(10, 18, 30, 0.76)),
+      url("../assets/bg-main.jpg") center center / cover no-repeat;
+  }
+
+  .logo-topbar img {
+    height: 28px;
+  }
+
+  .logo-topbar .logo-text {
+    font-size: 14px;
+  }
+}
