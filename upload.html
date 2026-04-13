@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사진 업로드</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <h1>사진 업로드</h1>
+        <p id="projectNameText" class="subtext">프로젝트 불러오는 중...</p>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="backToMyPhotosBtn" class="ghost-btn" type="button">내 사진 페이지</button>
+        <button id="logoutBtn" class="ghost-btn" type="button">로그아웃</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="messageBox" class="message-box hidden"></div>
+
+      <section class="card-section">
+        <div class="section-head">
+          <h2>현재 위치 및 조사 구역</h2>
+          <p id="locationStatus" class="subtext">현재 위치를 확인하는 중입니다.</p>
+        </div>
+        <div id="map" class="map-box"></div>
+      </section>
+
+      <section class="card-section">
+        <div class="section-head">
+          <h2>사진 업로드</h2>
+          <p class="subtext">현재 위치가 프로젝트 반경 안에 있어야 업로드할 수 있습니다.</p>
+        </div>
+
+        <div class="upload-grid">
+          <div class="upload-box">
+            <label class="input-label" for="cameraInput">카메라 촬영 업로드</label>
+            <input id="cameraInput" type="file" accept="image/*" capture="environment" />
+          </div>
+
+          <div class="upload-box">
+            <label class="input-label" for="galleryInput">앨범에서 업로드</label>
+            <input id="galleryInput" type="file" accept="image/*" />
+          </div>
+        </div>
+
+        <div class="preview-card">
+          <img id="previewImage" class="preview-image hidden" alt="미리보기" />
+          <div id="fileInfo" class="file-info">선택된 파일이 없습니다.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="memoInput">메모</label>
+          <textarea id="memoInput" rows="4" placeholder="사진에 대한 간단한 설명을 입력하세요."></textarea>
+        </div>
+
+        <button id="uploadBtn" class="primary-btn" type="button" disabled>업로드</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
+  <script src="./js/supabase.js"></script>
+  <script src="./js/common.js"></script>
+  <script src="./js/map.js"></script>
+  <script src="./js/upload.js"></script>
+</body>
+</html>

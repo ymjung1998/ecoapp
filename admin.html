@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 페이지</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <h1>관리자 페이지</h1>
+        <p class="subtext">프로젝트별 전체 사진 취합 및 지도 확인</p>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="goProjectsBtn" class="ghost-btn" type="button">프로젝트 선택</button>
+        <button id="logoutBtn" class="ghost-btn" type="button">로그아웃</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="messageBox" class="message-box hidden"></div>
+
+      <section class="card-section">
+        <div class="filter-row">
+          <div class="form-group narrow">
+            <label for="projectSelect">프로젝트</label>
+            <select id="projectSelect"></select>
+          </div>
+
+          <div class="inline-actions">
+            <button id="loadBtn" class="primary-btn" type="button">불러오기</button>
+            <button id="downloadCsvBtn" class="ghost-btn" type="button">CSV 다운로드</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-section">
+        <div class="section-head">
+          <h2>전체 사진 지도</h2>
+          <p id="adminCountText" class="subtext">0건</p>
+        </div>
+        <div id="map" class="map-box"></div>
+      </section>
+
+      <section class="card-section">
+        <div class="section-head">
+          <h2>전체 사진 목록</h2>
+        </div>
+        <div id="adminPhotoList" class="photo-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="./js/supabase.js"></script>
+  <script src="./js/common.js"></script>
+  <script src="./js/map.js"></script>
+  <script src="./js/admin.js"></script>
+</body>
+</html>
