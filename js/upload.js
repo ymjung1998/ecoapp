@@ -2,8 +2,12 @@ const backToMyPhotosBtn = qs("#backToMyPhotosBtn");
 const locationStatus = qs("#locationStatus");
 const uploadBtn = qs("#uploadBtn");
 const projectNameUploadText = qs("#projectNameText");
+
+const cameraBtn = qs("#cameraBtn");
+const galleryBtn = qs("#galleryBtn");
 const cameraInput = qs("#cameraInput");
 const galleryInput = qs("#galleryInput");
+
 const previewImage = qs("#previewImage");
 const fileInfo = qs("#fileInfo");
 const memoInput = qs("#memoInput");
@@ -18,6 +22,14 @@ let currentLocation = null;
 
 backToMyPhotosBtn.addEventListener("click", () => {
   window.location.href = "./my-photos.html";
+});
+
+cameraBtn.addEventListener("click", () => {
+  cameraInput.click();
+});
+
+galleryBtn.addEventListener("click", () => {
+  galleryInput.click();
 });
 
 cameraInput.addEventListener("change", event => {
@@ -121,8 +133,8 @@ async function loadCurrentLocation() {
     locationStatus.textContent = "현재 위치는 프로젝트 반경 안에 있습니다. 카메라 업로드가 가능합니다.";
     showMessage("현재 위치가 프로젝트 반경 안에 있습니다. 카메라 촬영 업로드가 가능합니다.", "success");
   } else {
-    locationStatus.textContent = "현재 위치는 프로젝트 반경 밖입니다. 앨범 업로드는 사진 위치가 반경 안이면 가능합니다.";
-    showMessage("현재 위치가 반경 밖이어도, 앨범 사진의 EXIF 위치가 반경 안이면 업로드할 수 있습니다.", "info");
+    locationStatus.textContent = "앨범 업로드는 사진 위치가 반경 안이면 가능합니다.";
+    showMessage("현재 위치가 반경 밖이므로 촬영할 수 없습니다.", "info");
   }
 
   updateUploadButtonState();

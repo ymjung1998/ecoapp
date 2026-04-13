@@ -6,64 +6,67 @@
   <title>생태조사단 플랫폼 - 로그인</title>
   <link rel="stylesheet" href="./css/style.css" />
 </head>
-<body class="auth-body">
-  <div class="auth-shell">
-    <div class="auth-card">
-      <div class="logo-topbar">
-        <img src="./assets/khc-logo.png" alt="한국도로공사 로고" />
-        <div class="logo-text">한국도로공사 생태조사단 플랫폼</div>
-      </div>
-
-      <div class="brand-block">
-        <div class="brand-badge">ECO</div>
+<body>
+  <div class="page-shell page-shell-login">
+    <header class="topbar">
+      <div>
+        <div class="logo-topbar">
+          <img src="./assets/khc-logo.png" alt="한국도로공사 로고" />
+          <div class="logo-text">한국도로공사 생태조사단 플랫폼</div>
+        </div>
         <h1>생태조사단 플랫폼</h1>
-        <p>프로젝트 구역 내 생태 사진을 업로드하고 관리하는 웹 플랫폼</p>
+        <p class="subtext">프로젝트 구역 내 생태 사진을 업로드하고 관리하는 웹 플랫폼</p>
       </div>
+    </header>
 
-      <div class="tabs">
-        <button id="tabLogin" class="tab-btn active" type="button">로그인</button>
-        <button id="tabSignup" class="tab-btn" type="button">회원가입</button>
-      </div>
-
-      <div id="messageBox" class="message-box hidden"></div>
-
-      <form id="loginForm" class="form active" autocomplete="off">
-        <div class="form-group">
-          <label for="loginId">아이디</label>
-          <input id="loginId" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+    <main class="login-main-center">
+      <section class="card-section login-form-section">
+        <div class="section-head">
+          <h2>로그인 / 회원가입</h2>
+          <p class="subtext">6자리 숫자 아이디와 비밀번호를 사용합니다.</p>
         </div>
 
-        <div class="form-group">
-          <label for="loginPassword">비밀번호</label>
-          <input id="loginPassword" type="password" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+        <div class="tabs">
+          <button id="tabLogin" class="tab-btn active" type="button">로그인</button>
+          <button id="tabSignup" class="tab-btn" type="button">회원가입</button>
         </div>
 
-        <button class="primary-btn full" type="submit">로그인</button>
-      </form>
+        <div id="messageBox" class="message-box hidden"></div>
 
-      <form id="signupForm" class="form" autocomplete="off">
-        <div class="form-group">
-          <label for="signupName">이름</label>
-          <input id="signupName" type="text" maxlength="50" placeholder="이름 입력" />
-        </div>
+        <form id="loginForm" class="form active" autocomplete="off">
+          <div class="form-group">
+            <label for="loginId">아이디</label>
+            <input id="loginId" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+          </div>
 
-        <div class="form-group">
-          <label for="signupId">아이디</label>
-          <input id="signupId" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
-        </div>
+          <div class="form-group">
+            <label for="loginPassword">비밀번호</label>
+            <input id="loginPassword" type="password" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+          </div>
 
-        <div class="form-group">
-          <label for="signupPassword">비밀번호</label>
-          <input id="signupPassword" type="password" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
-        </div>
+          <button class="primary-btn full" type="submit">로그인</button>
+        </form>
 
-        <button class="primary-btn full" type="submit">회원가입</button>
-      </form>
+        <form id="signupForm" class="form" autocomplete="off">
+          <div class="form-group">
+            <label for="signupName">이름</label>
+            <input id="signupName" type="text" maxlength="50" placeholder="이름 입력" />
+          </div>
 
-      <div class="auth-help">
-        <p>회원가입과 로그인은 6자리 숫자 아이디/비밀번호를 사용합니다.</p>
-      </div>
-    </div>
+          <div class="form-group">
+            <label for="signupId">아이디</label>
+            <input id="signupId" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">비밀번호</label>
+            <input id="signupPassword" type="password" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+          </div>
+
+          <button class="primary-btn full" type="submit">회원가입</button>
+        </form>
+      </section>
+    </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

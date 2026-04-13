@@ -40,21 +40,32 @@
         <div class="section-head">
           <h2>사진 업로드</h2>
           <p class="subtext">
-            카메라 촬영 업로드는 현재 위치가 프로젝트 반경 안이어야 합니다.
-            앨범 업로드는 사진의 위치(EXIF)가 프로젝트 반경 안이면 가능합니다.
-            아이폰 웹카메라 촬영 사진은 위치 EXIF가 없을 수 있으며, 이 경우 현재 위치 기준으로 처리됩니다.
+            
           </p>
         </div>
 
         <div class="upload-grid">
           <div class="upload-box">
-            <label class="input-label" for="cameraInput">카메라로 바로 촬영</label>
-            <input id="cameraInput" type="file" accept="image/*" capture="environment" />
+            <div class="input-label">카메라로 촬영</div>
+            <button id="cameraBtn" class="primary-btn upload-action-btn" type="button">촬영</button>
+            <input
+              id="cameraInput"
+              class="hidden-file-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            />
           </div>
 
           <div class="upload-box">
-            <label class="input-label" for="galleryInput">앨범에서 선택</label>
-            <input id="galleryInput" type="file" accept="image/*" />
+            <div class="input-label">앨범에서 선택</div>
+            <button id="galleryBtn" class="primary-btn upload-action-btn" type="button">앨범</button>
+            <input
+              id="galleryInput"
+              class="hidden-file-input"
+              type="file"
+              accept="image/*"
+            />
           </div>
         </div>
 
@@ -72,7 +83,7 @@
           ></textarea>
         </div>
 
-        <button id="uploadBtn" class="primary-btn" type="button" disabled>업로드</button>
+        <button id="uploadBtn" class="primary-btn full" type="button" disabled>업로드</button>
       </section>
     </main>
   </div>
