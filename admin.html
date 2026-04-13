@@ -16,7 +16,7 @@
           <div class="logo-text">한국도로공사 생태조사단 플랫폼</div>
         </div>
         <h1>관리자 페이지</h1>
-        <p class="subtext">프로젝트별 전체 사진 취합 및 지도 확인</p>
+        <p class="subtext">프로젝트별 · 주민별 · 기간별 사진 조회 및 다운로드</p>
       </div>
 
       <div class="topbar-actions">
@@ -35,10 +35,28 @@
             <select id="projectSelect"></select>
           </div>
 
-          <div class="inline-actions">
-            <button id="loadBtn" class="primary-btn" type="button">불러오기</button>
-            <button id="downloadCsvBtn" class="ghost-btn" type="button">CSV 다운로드</button>
+          <div class="form-group narrow">
+            <label for="userSelect">주민</label>
+            <select id="userSelect">
+              <option value="">전체</option>
+            </select>
           </div>
+
+          <div class="form-group narrow">
+            <label for="startDate">시작일</label>
+            <input id="startDate" type="date" />
+          </div>
+
+          <div class="form-group narrow">
+            <label for="endDate">종료일</label>
+            <input id="endDate" type="date" />
+          </div>
+        </div>
+
+        <div class="inline-actions admin-actions-row">
+          <button id="loadBtn" class="primary-btn" type="button">불러오기</button>
+          <button id="downloadCsvBtn" class="ghost-btn" type="button">CSV 다운로드</button>
+          <button id="downloadZipBtn" class="ghost-btn" type="button">ZIP 다운로드</button>
         </div>
       </section>
 
@@ -62,6 +80,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="./js/supabase.js"></script>
   <script src="./js/common.js"></script>
   <script src="./js/map.js"></script>

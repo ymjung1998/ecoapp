@@ -661,3 +661,88 @@ option {
     padding: 18px;
   }
 }
+
+/* =========================================
+   관리자 페이지 전용 보정
+========================================= */
+
+/* 필터 영역 */
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.filter-row .form-group {
+  margin-bottom: 0;
+}
+
+/* 관리자 버튼 줄 */
+.admin-actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* 다운로드 버튼 차별화 */
+#downloadCsvBtn {
+  background: rgba(47, 109, 246, 0.18);
+  color: #ffffff;
+  border: 1px solid rgba(47, 109, 246, 0.30);
+}
+
+#downloadCsvBtn:hover {
+  background: rgba(47, 109, 246, 0.32);
+}
+
+#downloadZipBtn {
+  background: rgba(24, 128, 56, 0.18);
+  color: #ffffff;
+  border: 1px solid rgba(24, 128, 56, 0.30);
+}
+
+#downloadZipBtn:hover {
+  background: rgba(24, 128, 56, 0.32);
+}
+
+/* 불러오기 버튼 강조 */
+#loadBtn {
+  min-width: 120px;
+}
+
+/* 관리자 카드 가독성 보정 */
+.photo-card {
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+}
+
+.photo-thumb {
+  transition: transform 0.2s ease;
+}
+
+.photo-thumb:hover {
+  transform: scale(1.03);
+}
+
+/* 지도 강조 */
+.map-box {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* 리스트 여백 보정 */
+.photo-list {
+  gap: 16px;
+}
+
+/* 모바일 대응 */
+@media (max-width: 640px) {
+  .admin-actions-row {
+    flex-direction: column;
+  }
+
+  .admin-actions-row button {
+    width: 100%;
+  }
+}
